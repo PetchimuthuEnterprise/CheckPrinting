@@ -1,4 +1,5 @@
-﻿using System;
+﻿using secure.CheckPrinting.com.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -21,9 +22,21 @@ namespace secure.CheckPrinting.com.Controllers
         /// Add New Check Templete
         /// </summary>
         /// <returns></returns>
-        public ActionResult AddNewCheckTemplete(long id)
+        public ActionResult AddNewCheckTemplete(long? id)
         {
             return View();
+        }
+        #endregion
+
+        #region Save Check Template
+        /// <summary>
+        /// Save Check Template
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult SaveCheckTemplate(List<CheckElements> CheckElementsList)
+        {
+            return Json(true, JsonRequestBehavior.AllowGet);
         }
         #endregion
 

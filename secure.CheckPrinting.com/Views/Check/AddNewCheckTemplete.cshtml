@@ -1,8 +1,68 @@
-﻿
-@{
-    ViewBag.Title = "AddNewCheckTemplete";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<h2>AddNewCheckTemplete</h2>
+</head>
+<body>
+    @using (Html.BeginForm("SaveCheckTemplate", "Check", FormMethod.Get, new { id = "frmSaveCheckTemplate", autocomplete = "off" }))
+    {
+        <div style="border: 1px solid rgba(0, 0, 0, 0.2); margin-bottom: 15px; margin-top: 50px;  padding: 15px 15px 0px;">
+            <div class="check">
+                <div id="logo" data-item-name="BUSINESSLOGO" class="ui-widget-content">
+                    <p>logo</p>
+                </div>
+                <div id="BusinessName" data-item-name="BUSINESSNAME" class="ui-widget-content">
+                    <span>Business Name</span>
+                </div>
+            </div>
+        </div>
+        <div class="spacer15"></div>
+        <div>
+            <input type="button" value="Save" id="btnSaveCheck" onclick="SaveCheckTemplate(this);" />
+        </div>
+    }
+</body>
+</html>
 
+<script type="text/javascript">
+    $(function () {
+        $("#logo").draggable({ containment: "parent" });
+        $("#BusinessName").draggable({ containment: "parent" });
+    });
+
+    function SaveCheckTemplate(obj) {
+        if ($("#frmSaveCheckTemplate").valid()) {
+            $(obj).attr('disabled', true);
+            var checkElementsList = [];
+            var i = 0;
+            $("div[class*='ui-widget-content']").each(function () {
+                var element = {};
+                element['Name'] = $(this).attr('data-item-name');
+                element['Top'] = $(this).css('left').replace('px', '');
+                element['Left'] = $(this).css('top').replace('px', '');
+                element['Width'] = $(this).css('width').replace('px', '');
+                element['Height'] = $(this).css('height').replace('px', '');
+                checkElementsList[i] = element;
+                i++;
+            });
+            $.ajax({
+                type: "POST",
+                url: "/Check/SaveCheckTemplate",
+                data: {
+                    CheckElementsList: checkElementsList
+                },
+                async: true,
+                success: function (data) {
+                    if (data != null && data.Status == 'Success') {
+                        $(obj).attr('disabled', false);
+                    } else {
+                        $(obj).attr('disabled', false);
+                    }
+                }
+            });
+        }
+    }
+
+</script>
